@@ -1,0 +1,54 @@
+#know {
+    font-family: helvetica,tahoma,verdana,sans-serif;
+    padding: 0px;
+    font-size: 12px;
+    margin: 0;
+    width: 100%;
+    min-width: 800px;
+    display: block;
+}
+h1 {
+    display: block;
+    -webkit-margin-before: 0.67em;
+    -webkit-margin-after: 0.67em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+}
+.textdiv
+{
+    font-size:15px;
+    line-height:20px;
+    width: 900px;
+}
+table.gridtable {
+    font-family: verdana,arial,sans-serif;
+    color: #333333;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border: 1px #666666 solid;
+    border-collapse: collapse;
+    padding: 5px;
+}
+table.gridtable th {
+    border: 1px #666666 solid;
+    padding: 8px;
+}
+table.gridtable td {
+    border: 1px #666666 solid;
+    padding: 5px;
+}
+table.gridtable td a{
+    color:#08c;
+    text-decoration:none ;
+    line-height:22px;
+}
+table.gridtable td a:hover{
+    color:#0169A3;
+    text-decoration:underline
+}
+h3{
+    padding-top: 5px;
+    padding-bottom: 10px;
+}

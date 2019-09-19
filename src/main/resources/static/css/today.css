@@ -1,0 +1,307 @@
+
+li {
+    list-style: none
+}
+
+input, select, textarea {
+    outline: none
+}
+
+img {
+    display: block;
+    border: 0 none
+}
+
+i, em {
+    font-style: normal
+}
+
+b {
+    font-weight: 400
+}
+
+.nav-bg {
+    font: 400 12px/1 Arial, "Microsoft YaHei", Helvetica, sans-serif, "å®‹ä½“";
+    background-color: #fff;
+    -webkit-text-size-adjust: none
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    color: #595959
+}
+
+a:hover {
+    text-decoration: none
+}
+
+.nav-b1 .c-top .city-select .select-item .select-item-sp .c-text, .nav-b1 .c-left .r1-tmp .num, .nav-b1 .c-left .r1-img .icon, .nav-b1 .c-left .livindex .liv-img, .nav-b1 .c-left .row3 .yujing, .nav-b1 .c-left .row4 .ishare a, .nav-b1 .c-right .r-col .icon, .nav-b1 .c-right .r-more .icon, .cleft-24hours .hours-btn .btn-prev, .cleft-24hours .hours-btn .btn-next, .cleft-24hours .hours-list .list-item .icon, .cleft-relcity .relcity-list .list-item .city, .cleft-around .relcity-list .list-item .city, .cleft-relcity .relcity-list .list-item .icon, .cleft-around .relcity-list .list-item .icon, .cleft-travel .list-item .item-right .title a, .cleft-travel .list-item .item-right .sub-title a, .cleft-hotel .list-item .item-right .title a, .cleft-hotel .list-item .item-right .sub-title a, .cright-livindex .list-item .item-top .icon, .footer .wrapper-title .title-link {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+
+.upper .u-container, .nav-b1 .n-container {
+    margin-left: auto;
+    margin-right: auto
+}
+
+.upper .u-container, .nav-b1 .n-container {
+    -moz-transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    transition: 0.5s all
+}
+
+.nav-b1 {
+    position: relative;
+    height: 550px;
+    color: #fff
+}
+
+.nav-b1 .nav-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden
+}
+
+.nav-b1 .nav-bg .lazy {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 2560px;
+    height: 550px;
+    margin-left: -1280px
+}
+
+.nav-b1 .n-container {
+    width: 1180px
+}
+
+.nav-b1 .c-top {
+    position: relative;
+    height: 50px;
+    z-index: 2
+}
+
+.nav-b1 .c-top .t-wrapper {
+    padding-top: 18px
+}
+
+.nav-b1 .c-top .city {
+    color: #fff;
+    font-size: 14px
+}
+
+.nav-b1 .c-top .city:hover {
+    text-shadow: 0 1px 3px rgba(32, 21, 18, 0.45);
+    opacity: .95;
+    -webkit-opacity: 0.95;
+    -moz-opacity: 0.95;
+    -khtml-opacity: 0.95;
+    filter: alpha(opacity=95)
+}
+
+.nav-b1 .c-top em {
+    font-size: 30px;
+    margin-top: 20px;
+    margin-right: 4px
+}
+
+.nav-b1 .c-left {
+    width: 300px;
+    height: 452px;
+    float: left;
+    position: relative
+}
+
+.nav-b1 .c-left a {
+    color: #fff
+}
+
+.nav-b1 .c-left .row1 {
+    margin-top: 48px;
+    zoom: 1
+}
+
+.nav-b1 .c-left .row1:after {
+    content: ".";
+    clear: both;
+    display: block;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden
+}
+
+.nav-b1 .c-left .r1-tmp {
+    float: left;
+    width: 170px;
+    font-size: 100px;
+    height: 80px;
+    line-height: 80px;
+    text-align: right;
+    *margin-top: -28px
+}
+
+.nav-b1 .c-left .r1-tmp .num {
+    position: relative;
+    padding-right: 8px
+}
+
+.nav-b1 .c-left .r1-tmp i {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    right: -8px;
+    top: 3px;
+    background: url("../../img/pc/icon.png") no-repeat;
+    background-position: -20px -35px
+}
+
+.nav-b1 .c-left .r1-img {
+    float: left;
+    text-align: center;
+    width: 130px
+}
+
+.nav-b1 .c-left .r1-img .icon {
+    position: relative;
+    top: -3px;
+    *top: -14px;
+    width: 48px;
+    height: 48px
+}
+
+.nav-b1 .c-left .r1-img .text {
+    font-size: 16px;
+    margin-top: 11px;
+    *margin-top: 0
+}
+
+.nav-b1 .c-left .row2 {
+    margin-top: 65px;
+    font-size: 14px;
+    text-align: center
+}
+
+.nav-b1 .c-left .row2-1, .nav .c-left .row2-2 {
+    margin-top: 65px
+}
+
+.nav-b1 .c-left .row2-3 {
+    margin-top: 48px
+}
+
+.nav-b1 .c-left .row2-up {
+    margin-top: 48px
+}
+
+.nav-b1 .c-left .date {
+    display: block;
+    margin-bottom: 25px
+}
+
+.nav-b1 .c-left .date:hover {
+    text-shadow: 0 1px 3px rgba(32, 21, 18, 0.45);
+    opacity: .95;
+    -webkit-opacity: 0.95;
+    -moz-opacity: 0.95;
+    -khtml-opacity: 0.95;
+    filter: alpha(opacity=95)
+}
+
+.nav-b1 .c-left .condition {
+    margin-bottom: 23px;
+    font-size: 0
+}
+
+.nav-b1 .c-left .condition .wind, .nav-b1 .c-left .condition .hundity {
+    font-size: 14px;
+    position: relative
+}
+
+.nav-b1 .c-left .condition .wind i, .nav-b1 .c-left .condition .hundity i {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -6px
+}
+
+.nav-b1 .c-left .condition .wind {
+    margin-right: 40px;
+    padding-left: 22px
+}
+
+.nav-b1 .c-left .condition .wind i {
+    width: 12px;
+    height: 12px;
+    background: url("../../img/pc/icon.png") no-repeat;
+    background-position: 0 0;
+    margin-right: 10px
+}
+
+.nav-b1 .c-left .condition .hundity {
+    padding-left: 20px
+}
+
+.nav-b1 .c-left .condition .hundity i {
+    width: 10px;
+    height: 12px;
+    background: url("../../img/pc/icon.png") no-repeat;
+    background-position: -15px 0;
+    margin-right: 10px
+}
+
+.nav-b1 .c-left .livindex .liv-text {
+    margin-right: 10px;
+    height: 18px;
+    line-height: 18px;
+    position: relative;
+    padding-left: 22px
+}
+
+.nav-b1 .c-left .livindex .liv-text i {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -6px;
+    width: 12px;
+    height: 12px;
+    background: url("../../img/pc/icon.png") no-repeat;
+    background-position: -28px 0;
+    margin-right: 10px
+}
+
+.nav-b1 .c-left .livindex .liv-text a:hover {
+    text-shadow: 0 1px 3px rgba(32, 21, 18, 0.45);
+    opacity: .95;
+    -webkit-opacity: 0.95;
+    -moz-opacity: 0.95;
+    -khtml-opacity: 0.95;
+    filter: alpha(opacity=95)
+}
+
+.nav-b1 .c-left .livindex .liv-text em {
+    font-weight: bold
+}
+
+.nav-b1 .c-left .livindex .liv-img {
+    text-align: center;
+    font-size: 12px;
+    width: 70px;
+    height: 18px;
+    line-height: 18px;
+    border-radius: 2px
+}
+
+.nav-b1 .c-right {
+    width: 850px;
+    height: 452px;
+    float: right;
+    color: #fff;
+    font-size: 14px
+}

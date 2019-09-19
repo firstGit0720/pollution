@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weather.pollution.mapper.PollutionMapper">
+
+    <!-- <resultMap id="pollutionCol" type="com.example.bean.Pollution">
+         <result property="id" column="id"/>
+         <result property="place" column="place" />
+         <result property="polTime" column="polTime" />
+         <result property="aqi" column="aqi"/>
+         <result property="aqiPm" column="apiPm"/>
+         <result property="aqg" column="aqg"/>
+         <result property="pm2" column="pm2"/>
+         <result property="pm10" column="pm10"/>
+         <result property="so2" column="so2"/>
+         <result property="co1" column="co1"/>
+         <result property="no2" column="no2"/>
+         <result property="o3" column="o3"/>
+     </resultMap>-->
+
+    <select id="numPolDays" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        pollution;
+
+    </select>
+
+    <select id="selectPolDays" parameterType="String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        pollution
+        WHERE
+        aqg = #{aqg}
+    </select>
+
+    <select id="showPollution" resultType="com.weather.pollution.pojo.Pollution">
+        SELECT *
+        FROM
+        pollution;
+    </select>
+
+    <select id="selectAllByPolTime" resultType="com.weather.pollution.pojo.Pollution">
+        select *
+        from
+        pollution
+        where
+        polTime &gt;= #{startTime} and polTime &lt;= #{endTime}
+    </select>
+
+    <!--<select id="selectPollutionByTime" resultType="com.weather.pollution.pojo.Pollution">-->
+    <!--select * from pollution where polTime like '%${polTime}%'-->
+    <!--</select>-->
+
+
+</mapper>

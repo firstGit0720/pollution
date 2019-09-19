@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>蜗牛天气-历史天气统计</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+	<script src="https://cdn.bootcss.com/jquery/1.2.3/jquery.min.js"></script>
+	<script src="js/skel.min.js"></script>
+	<script src="js/skel-panels.min.js"></script>
+	<script src="js/init.js"></script>
+	<noscript>
+		<link rel="stylesheet" href="css/skel-noscript.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/style-desktop.css" />
+	</noscript>
+
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+	<!--表格功能的导入-->
+	<link rel="stylesheet" href="css/bootstrap4alpha.css" />
+	<link rel="stylesheet" href="css/jquery.datatables.min.css" />
+	<link rel="stylesheet" href="css/buttons.dataTables.min.css" />
+	<style>
+		tbody td{
+			text-align: center;
+		}
+	</style>
+
+	<!--城市选择-->
+	<style type="text/css">
+		body{ background:#EEEEEE;margin:0; padding:0; font-family:"微软雅黑", Arial, Helvetica, sans-serif; }
+		a{ color:#006600; text-decoration:none;}
+		a:hover{color:#990000;}
+		.top{ margin:5px auto; color:#990000; text-align:left;}
+		.info select{ border:1px #993300 solid; background:#FFFFFF;}
+		.info{ margin:5px; text-align:left;}
+		.info #show{ color:#3399FF; }
+		.bottom{ text-align:right; font-size:12px; color:#CCCCCC; width:1000px;}
+	</style>
+
+
+	<style type="text/css">
+		.shadow {
+			-webkit-box-shadow: #666 0px 0px 1px;
+			-moz-box-shadow: #666 0px 0px 1px;
+			box-shadow: #666 0px 0px 1px;
+			background: white;
+			-webkit-border-radius: 10px;
+			border-radius: 10px;
+		}
+	</style>
+
+
+	<script type="text/javascript" language="javascript" src="js/jquery-3.0.0.min.js"></script>
+
+	<script type="text/javascript">
+
+        //日期格式化
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+
+        //数据的获取
+        var maxallweathertem = new Array()
+        var minallweathertem = new Array()
+        var dateallweatherArray = new Array()
+        var weathers = new Array();
+
+        function select() {
+            // alert($("#startTime").val() + $("#endTime").val());
+            $.ajax({
+                type: "get",
+                url: "/selectWeatherByTime",
+                contentType: "application/json; charset=utf-8",
+                data: {startTime: $("#startTime").val(), endTime: $("#endTime").val(),"cityname":$("#s_city").val()},
+                success: function (data) {
+                    // 字符串的拼接
+                    $('#example tbody').html('')
+                    for (var i = 0; i < data.length; i++) {
+                        var dateStr = new Date(data[i].weatherTime).Format("yyyy/MM/dd");
+                        //时间的格式化
+                        dateallweatherArray[i] = dateStr
+                        maxallweathertem[i] = data[i].maxTem
+                        minallweathertem[i] = data[i].minTem
+                        var html="<tr><td>"+data[i].place+"</td><td>"+dateStr+"</td><td>"+data[i].maxTem+"</td><td>"+data[i].minTem+"</td><td>"+data[i].status+"</td><td>"+data[i].windDir+"</td><td>"+data[i].windScale+"</td></tr>";
+                        $("#example tbody").append(html);
+                    }
+                },
+                error: function () {
+                    alert("出现错误，请重试！")
+                }
+
+            });
+
+        }
+
+	</script>
+
+</head>
+
+<body>
+
+<!-- Header -->
+<div id="header">
+	<div class="container">
+
+		<div id="logo">
+			<h1>历史天气统计</h1>
+			<span></span>
+			<br /><br />
+		</div>
+
+		<nav id="nav">
+			<ul>
+				<li>
+					<a href="index.html" style="font-weight: bold;">实时监测</a>
+				</li>
+				<li>
+					<a href="pollution.html" style="font-weight: bold;">历史污染统计</a>
+				</li>
+				<li class="active" style="font-weight: bold;">
+					<a href="weather.html">历史天气统计</a>
+				</li>
+				<li>
+					<a href="about.html" style="font-weight: bold;">相关知识</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</div>
+<div id="main">
+
+	<div class="container ">
+		<div style="text-align: center;">
+			<div id="allweather" style="width: 100%;height: 300px;float: left;padding: 30px;" class="shadow"></div>
+			<div style="width: 30%;height: 300px;" class="shadow"></div>
+		</div>
+		<br /><br />
+
+		<div class="container1 dt-example dt-example-bootstrap4 shadow" style="padding: 30px;">
+			<section>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="info">
+							<div>
+								<select id="s_province" name="s_province" style="width: 100px;height: 40px"></select>  
+								<select id="s_city" name="s_city" style="width: 100px;height: 40px"></select>
+								<input type="date" id="startTime" value="2018-03-01">到<input type="date" id="endTime" value="2018-04-01" />
+								<button onclick="select()" class="btn btn-default">搜索</button>  
+								<script class="resources library" src="js/area.js" type="text/javascript"></script>
+
+								<script type="text/javascript">_init_area();</script>
+							</div>
+							<div id="show"></div>
+						</div>
+						<script type="text/javascript">
+                            var Gid  = document.getElementById ;
+                            var showArea = function(){
+                                Gid('show').innerHTML = "<h3>省" + Gid('s_province').value + " - 市" +
+                                    Gid('s_city').value + " - 县/区" +
+                                    Gid('s_county').value + "</h3>"
+                            }
+                            Gid('s_county').setAttribute('onchange','showArea()');
+						</script>
+
+						<h1>历史天气详细数据</h1>
+						<table id="example" class="display" role="grid" aria-describedby="example_info">
+							<thead>
+							<tr>
+								<th>地点</th>
+								<th>日期</th>
+								<th>最高气温（℃）</th>
+								<th>最低气温（℃）</th>
+								<th>天气状况</th>
+								<th>风向</th>
+								<th>风力</th>
+							</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+
+
+<!-- Footer -->
+<div id="footer">
+	<div id="copyright">
+		<div class="container">
+			Copyright &copy; 独角兽工作室
+		</div>
+	</div>
+</div>
+<script src="js/showweather.js"></script>
+<script src="js/allweather.js"></script>
+<script src="jstable/jquery.datatables.min.js"></script>
+<script src="jstable/dataTables.buttons.min.js"></script>
+<script src="jstable/jszip.min.js"></script>
+<script src="jstable/buttons.html5.min.js"></script>
+<script src="jstable/buttons.flash.min.js"></script>
+<script src="jstable/pdfmake.min.js"></script>
+<script src="jstable/vfs_fonts.js"></script>
+<script src="jstable/buttons.print.min.js"></script>
+<script>
+    $(document).ready(function(){
+        for(i=0;i<weathers.length;i++){
+            var dateStr = new Date(weathers[i].weatherTime).Format("yyyy-MM-dd");
+            var html="<tr><td>"+weathers[i].place+"</td><td>"+dateStr+"</td><td>"+weathers[i].maxTem+"</td><td>"+weathers[i].minTem+"</td><td>"+weathers[i].status+"</td><td>"+weathers[i].windDir+"</td><td>"+weathers[i].windScale+"</td></tr>";
+            $("#example tbody").append(html);
+        }
+
+        $('#example').DataTable( {
+            dom: 'Bfrtip',
+            language: {
+                emptyTable: '没有数据',
+                loadingRecords: '加载中...',
+                processing: '查询中...',
+                search: '检索:',
+                lengthMenu: '每页 _MENU_ 件',
+                zeroRecords: '没有数据',
+                paginate: {
+                    'first':      '第一页',
+                    'last':       '最后一页',
+                    'next':       '下一页',
+                    'previous':   '上一页'
+                },
+                info: '第 _PAGE_ 页 / 总 _PAGES_ 页',
+                infoEmpty: '没有数据',
+                infoFiltered: '(过滤总件数 _MAX_ 条)',
+            },
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                },
+                {
+                    extend: 'excelHtml5',
+                    title: 'Data export'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: 'Data export'
+                },
+                {
+                    extend: 'csvHtml5',
+                    title: 'Data export'
+                },
+                {
+                    extend:'print',
+                }
+            ]
+        } );
+
+        $(".buttons-copy").text('复制');
+        $(".buttons-excel").text('导出到excel');
+        $(".buttons-pdf").text('导出到pdf');
+        $(".buttons-csv").text('导出到csv');
+        $(".buttons-print").text('打印');
+
+    });
+</script>
+</body>
+
+</html>

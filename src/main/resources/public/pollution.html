@@ -1,0 +1,591 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title>蜗牛天气-历史污染统计</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+		<script src="https://cdn.bootcss.com/jquery/1.2.3/jquery.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-panels.min.js"></script>
+		<script src="js/init.js"></script>
+		<link rel="stylesheet" href="css/style3.css" />
+		<link rel="stylesheet" href="css/reset.min.css">
+		<link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Open+Sans:300,400|Merriweather:300'>
+		<noscript>
+			<link rel="stylesheet" href="css/skel-noscript.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-desktop.css" />
+		</noscript>
+
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+		<link href="css/base.css" rel="stylesheet" type="text/css">
+		<link href="css/home.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="css/bootstrap4alpha.css" />
+		<link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap4.css">
+		<link rel="stylesheet" type="text/css" href="css/buttons.bootstrap4.css">
+		<link rel="stylesheet" type="text/css" href="css/shCore.css">
+		<link rel="stylesheet" type="text/css" href="css/demo.css">
+
+		<link rel="stylesheet" href="css/jquery.datatables.min.css" />
+		<link rel="stylesheet" href="css/buttons.dataTables.min.css" />
+		<style>
+			tbody td {
+				text-align: center;
+			}
+		</style>
+
+		<style type="text/css">
+			.shadow {
+				/*-webkit-box-shadow: #666 0px 0px 5px;
+				-moz-box-shadow: #666 0px 0px 5px;
+				box-shadow: #666 0px 0px 5px;
+				background: white;*/
+				-webkit-border-radius: 10px;
+				border-radius: 10px;
+				-moz-box-shadow: 2px 2px 10px #333333;
+				-webkit-box-shadow: 2px 2px 10px #333333;
+				box-shadow: 2px 2px 10px #333333;
+			}
+		</style>
+
+		<style>
+			* {
+				margin: 0;
+				padding: 0
+			}
+			
+			ul,
+			li {
+				list-style: none
+			}
+			
+			li:hover {
+				cursor: pointer;
+			}
+			
+			.tabClick {
+				background: #F6F9FE;
+				overflow: hidden
+			}
+			
+			.tabClick li {
+				height: 40px;
+				line-height: 40px;
+				width: 12.5%;
+				float: left;
+				text-align: center
+			}
+			
+			.tabClick li.active {
+				color: #099;
+				transition: 0.1s;
+				font-weight: bold
+			}
+			
+			.tabCon {
+				overflow: hidden
+			}
+			
+			.tabBox {
+				position: relative
+			}
+			
+			.tabList {
+				/*word-break: break-all;*/
+				width: 100%;
+				float: left;
+				line-height: 1px;
+				text-align: center;
+				color: #333333;
+				/*font-size: 36px;*/
+				/*font-family: "Arial Black"*/
+			}
+			
+			.lineBorder {
+				height: 2px;
+				overflow: hidden;
+				border-bottom: 1px solid #099;
+				background: #f3f3f3
+			}
+			/*.lineDiv{ background: #099; height: 2px; width: auto;}*/
+		</style>
+		<script>
+            //echar信息的获取
+            var dateArray = new Array()
+            var aqiArray = new Array()
+            var coArray = new Array()
+            var pm10Array = new Array()
+            var pm25Array = new Array()
+            var so2Array = new Array()
+            var no2Array = new Array()
+            var o3Array = new Array()
+            var pollution = new Array()
+            //日期格式化
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+            $(function () {
+                $.ajax({
+                    url:"/pollutionShow",
+                    type:"get",
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    data:{
+
+					},
+                    success:function (data) {
+                        // console.log(data)
+                        pollution = data
+                        for (var i = data.length-1; i>=0; i--){
+                            pollution = data
+                            var dateStr = new Date(pollution[i].polTime).Format("yyyy/MM/dd");
+                            dateArray[i] = dateStr
+                            o3Array[i] = pollution[i].o3
+                            aqiArray[i] = pollution[i].aqi
+                            coArray[i] = pollution[i].co1
+                            pm10Array[i] = pollution[i].pm10
+                            pm25Array[i] = pollution[i].pm2
+                            so2Array[i] = pollution[i].so2
+                            no2Array[i] = pollution[i].no2
+                        }
+                        initCharts();
+                        initCharts1();
+                        initCharts2();
+                        initCharts3();
+                        initCharts4();
+                        initCharts5();
+                        initCharts6();
+                        initCharts7();
+                    }
+                })
+            })
+
+			function selectpollution() {
+                alert("查询污染" + $("#s_city").val() + $("#startTime").val() + $("#endTime").val())
+                $.ajax({
+                    type: "get",
+                    url: "/selectAllByPolTime",
+                    async: false,
+                    data: {
+                        "cityname": $("#s_city").val(),
+                        "startTime": $("#startTime").val(),
+                        "endTime": $("#endTime").val()
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        $('#example tbody').html('')
+                        for (i = 0; i < data.length; i++) {
+                            var dateStr = new Date(data[i].polTime).Format("yyyy/MM/dd");
+                            var html = "<tr><td>" + dateStr + "</td><td>" + data[i].place + "</td><td>" + data[i].aqi + "</td><td>" + data[i].co1 + "</td><td>" + data[i].pm10 + "</td><td>" + data[i].pm2 + "</td><td>" + data[i].so2 + "</td><td>" + data[i].no2 + "</td><td>" + data[i].o3 + "</td></tr>";
+                            $("#example tbody").append(html);
+                        }
+                    }
+                })
+            }
+		</script>
+		
+
+	</head>
+
+	<body>
+
+		<!-- Header -->
+		<div id="header">
+			<div class="container">
+
+				<!-- Logo -->
+				<div id="logo">
+					<h1>历史污染统计</h1>
+					<span></span>
+					<br /><br />
+				</div>
+
+				<!-- Nav -->
+				<nav id="nav">
+					<ul>
+						<li>
+							<a href="index.html" style="font-weight: bold;">实时监测</a>
+						</li>
+						<li class="active" style="font-weight: bold;">
+							<a href="pollution.html">历史污染统计</a>
+						</li>
+						<li>
+							<a href="weather.html" style="font-weight: bold;">历史天气统计</a>
+						</li>
+						<li>
+							<a href="about.html" style="font-weight: bold;">相关知识</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+		<!-- Main -->
+		<div id="main">
+			<div class="container">
+				<div class="wrap" id="wrap">
+					<ul class="tabClick">
+						<li class="active">AQI</li>
+						<li>CO</li>
+						<li>PM10</li>
+						<li>PM2.5</li>
+						<li>SO2</li>
+						<li>NO2</li>
+						<li>O3</li>
+						<li>总览</li>
+					</ul>
+					<div class="lineBorder">
+						<div class="lineDiv">
+							<!--移动的div-->
+						</div>
+					</div>
+					<div class="tabCon" style="width: 100%; text-align: center;">
+						<div class="tabBox">
+							<div class="tabList">
+								<div id="apiproportion" style="height: 350px;width: 100%;"></div>
+								<div id="tq" style="height: 400px;width: 100%;"></div>
+							</div>
+							<div class="tabList">
+								<br />
+								<div id="tq1" style="height: 600px;width: 100%;padding-top: 100px"></div>
+							</div>
+							<div class="tabList">
+								<br />
+								<div id="tq2" style="height: 600px;width: 100%;padding-top: 100px"></div>
+							</div>
+							<div class="tabList">
+								<br />
+								<div id="tq3" style="height: 600px;width: 100%;padding-top: 100px"></div>
+							</div>
+							<div class="tabList">
+								<br />
+								<div id="tq4" style="height: 600px;width: 100%;padding-top: 100px"></div>
+							</div>
+							<div class="tabList">
+								<br />
+								<div id="tq5" style="height: 600px;width: 100%;padding-top: 100px"></div>
+							</div>
+							<div class="tabList">
+								<br />
+								<div id="tq6" style="height: 600px;width: 100%;padding-top: 100px"></div>
+							</div>
+							<div class="tabList">
+								<br /><br />
+								<div id="allpollution" style="height: 400px;width: 100%;padding-top: 40px"></div>
+								<div id="annualpollution" style="height: 500px;width: 100%;padding-top:30px ;"></div>
+							</div>
+						</div>
+					</div>
+					
+					
+			<div class="" style="padding: 50px;">
+
+				<div class="info">
+					<div>
+						<select id="s_province" name="s_province" style="width: 100px;height: 40px"></select>  
+						<select id="s_city" name="s_city" style="width: 100px;height: 40px"></select>
+						<input type="date" id="startTime" value="2018-03-01">到<input type="date" id="endTime" value="2018-04-01" />
+						<button onclick="selectpollution()" class="btn btn-default">搜索</button>  
+						<script class="resources library" src="js/area.js" type="text/javascript"></script>
+
+						<script type="text/javascript">_init_area();</script>
+					</div>
+					<div id="show"></div>
+				</div>
+				<script type="text/javascript">
+					var Gid  = document.getElementById ;
+					var showArea = function(){
+						Gid('show').innerHTML = "<h3>省" + Gid('s_province').value + " - 市" +
+							Gid('s_city').value + " - 县/区" +
+							Gid('s_county').value + "</h3>"
+					}
+					Gid('s_county').setAttribute('onchange','showArea()');
+				</script>
+
+				<h1>历史污染详细数据</h1>
+				
+				<table id="example" class="display" role="grid" aria-describedby="example_info" style="width: 100%;">
+					<thead>
+						<tr>
+							<th>  日期</th>
+							<th>  地点</th>
+							<th>  AQI</th>
+							<th>  CO</th>
+							<th>  PM10</th>
+							<th>  PM2.5</th>
+							<th>  SO2</th>
+							<th>  NO2</th>
+							<th>  O3</th>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+				</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer -->
+
+		<!-- Footer -->
+		<div id="footer">
+
+			<div id="copyright">
+				<div class="container">
+					Copyright &copy; 独角兽工作室
+				</div>
+			</div>
+		</div>
+
+		<!--导入echarts 图表-->
+		<script src="js/d.js"></script>
+		<script src="js/tq.js"></script>
+		<script src="js/tq1.js"></script>
+		<script src="js/tq2.js"></script>
+		<script src="js/tq3.js"></script>
+		<script src="js/tq4.js"></script>
+		<script src="js/tq5.js"></script>
+		<script src="js/tq6.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/index.js"></script>
+		<script src="js/aqiproportion.js"></script>
+		<script src="js/allpollution.js"></script>
+		<script src="js/annualpollution.js"></script>
+		<script src="js/zhiliang.js"></script>
+
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/SuperSlide.js"></script>
+		<script type="text/javascript">
+			$(".solution-more-slide").slide({
+				effect: 'fold'
+			});
+			//hover
+		</script>
+
+		<script charset="utf-8">
+			window.onload = function() {
+				var windowWidth = document.body.clientWidth; //window 宽度;
+				var wrap = document.getElementById('wrap');
+				var tabClick = wrap.querySelectorAll('.tabClick')[0];
+				var tabLi = tabClick.getElementsByTagName('li');
+
+				var tabBox = wrap.querySelectorAll('.tabBox')[0];
+				var tabList = tabBox.querySelectorAll('.tabList');
+
+				var lineBorder = wrap.querySelectorAll('.lineBorder')[0];
+				var lineDiv = lineBorder.querySelectorAll('.lineDiv')[0];
+
+				var tar = 0;
+				var endX = 0;
+				var dist = 0;
+
+				tabBox.style.overflow = 'hidden';
+				tabBox.style.position = 'relative';
+				tabBox.style.width = windowWidth * tabList.length + "px";
+
+				for(var i = 0; i < tabLi.length; i++) {
+					tabList[i].style.width = windowWidth + "px";
+					tabList[i].style.float = 'left';
+					tabList[i].style.float = 'left';
+					tabList[i].style.padding = '0';
+					tabList[i].style.margin = '0';
+					tabList[i].style.verticalAlign = 'top';
+					tabList[i].style.display = 'table-cell';
+				}
+
+				for(var i = 0; i < tabLi.length; i++) {
+					tabLi[i].start = i;
+					tabLi[i].onclick = function() {
+						var star = this.start;
+						for(var i = 0; i < tabLi.length; i++) {
+							tabLi[i].className = '';
+						};
+						tabLi[star].className = 'active';
+						init.lineAnme(lineDiv, windowWidth / tabLi.length * star)
+						init.translate(tabBox, windowWidth, star);
+						endX = -star * windowWidth;
+					}
+				}
+
+				function OnTab(star) {
+					if(star < 0) {
+						star = 0;
+					} else if(star >= tabLi.length) {
+						star = tabLi.length - 1
+					}
+					for(var i = 0; i < tabLi.length; i++) {
+						tabLi[i].className = '';
+					};
+
+					tabLi[star].className = 'active';
+					init.translate(tabBox, windowWidth, star);
+					endX = -star * windowWidth;
+				};
+
+				tabBox.addEventListener('touchstart', chstart, false);
+				tabBox.addEventListener('touchmove', chmove, false);
+				tabBox.addEventListener('touchend', chend, false);
+				//按下
+				function chstart(ev) {
+					ev.preventDefault;
+					var touch = ev.touches[0];
+					tar = touch.pageX;
+					tabBox.style.webkitTransition = 'all 0s ease-in-out';
+					tabBox.style.transition = 'all 0s ease-in-out';
+				};
+				//滑动
+				function chmove(ev) {
+					var stars = wrap.querySelector('.active').start;
+					ev.preventDefault;
+					var touch = ev.touches[0];
+					var distance = touch.pageX - tar;
+					dist = distance;
+					init.touchs(tabBox, windowWidth, tar, distance, endX);
+					init.lineAnme(lineDiv, -dist / tabLi.length - endX / 7);
+				};
+				//离开
+				function chend(ev) {
+					var str = tabBox.style.transform;
+					var strs = JSON.stringify(str.split(",", 1));
+					endX = Number(strs.substr(14, strs.length - 18));
+
+					if(endX > 0) {
+						init.back(tabBox, windowWidth, tar, 0, 0, 0.3);
+						endX = 0
+					} else if(endX < -windowWidth * tabList.length + windowWidth) {
+						endX = -windowWidth * tabList.length + windowWidth
+						init.back(tabBox, windowWidth, tar, 0, endX, 0.3);
+					} else if(dist < -windowWidth / 3) {
+						OnTab(tabClick.querySelector('.active').start + 1);
+						init.back(tabBox, windowWidth, tar, 0, endX, 0.3);
+					} else if(dist > windowWidth / 3) {
+						OnTab(tabClick.querySelector('.active').start - 1);
+					} else {
+						OnTab(tabClick.querySelector('.active').start);
+					}
+					var stars = wrap.querySelector('.active').start;
+					init.lineAnme(lineDiv, stars * windowWidth / 4);
+
+				};
+			};
+
+			var init = {
+				translate: function(obj, windowWidth, star) {
+					obj.style.webkitTransform = 'translate3d(' + -star * windowWidth + 'px,0,0)';
+					obj.style.transform = 'translate3d(' + -star * windowWidth + ',0,0)px';
+					obj.style.webkitTransition = 'all 0.3s ease-in-out';
+					obj.style.transition = 'all 0.3s ease-in-out';
+				},
+				touchs: function(obj, windowWidth, tar, distance, endX) {
+					obj.style.webkitTransform = 'translate3d(' + (distance + endX) + 'px,0,0)';
+					obj.style.transform = 'translate3d(' + (distance + endX) + ',0,0)px';
+				},
+				lineAnme: function(obj, stance) {
+					obj.style.webkitTransform = 'translate3d(' + stance + 'px,0,0)';
+					obj.style.transform = 'translate3d(' + stance + 'px,0,0)';
+					obj.style.webkitTransition = 'all 0.1s ease-in-out';
+					obj.style.transition = 'all 0.1s ease-in-out';
+				},
+				back: function(obj, windowWidth, tar, distance, endX, time) {
+					obj.style.webkitTransform = 'translate3d(' + (distance + endX) + 'px,0,0)';
+					obj.style.transform = 'translate3d(' + (distance + endX) + ',0,0)px';
+					obj.style.webkitTransition = 'all ' + time + 's ease-in-out';
+					obj.style.transition = 'all ' + time + 's ease-in-out';
+				},
+			}
+		</script>
+		<script src="jstable/jquery.datatables.min.js"></script>
+		<script src="jstable/dataTables.buttons.min.js"></script>
+		<script src="jstable/jszip.min.js"></script>
+		<script src="jstable/buttons.html5.min.js"></script>
+		<script src="jstable/buttons.flash.min.js"></script>
+		<script src="jstable/pdfmake.min.js"></script>
+		<script src="jstable/vfs_fonts.js"></script>
+		<script src="jstable/buttons.print.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				for(i = 0; i < pollution.length; i++) {
+                    var dateStr = new Date(pollution[i].polTime).Format("yyyy/MM/dd");
+                    dateArray[i] = dateStr
+					var html = "<tr><td>" + dateStr + "</td><td>" + pollution[i].place + "</td><td>" + pollution[i].aqi + "</td><td>" + pollution[i].co1 + "</td><td>" + pollution[i].pm10 + "</td><td>" + pollution[i].pm2 + "</td><td>" + pollution[i].so2 + "</td><td>" + pollution[i].no2 + "</td><td>" + pollution[i].o3 + "</td></tr>";
+					$("#example tbody").append(html);
+				}
+
+				$('#example').DataTable({
+					dom: 'Bfrtip',
+					language: {
+						emptyTable: '没有数据',
+						loadingRecords: '加载中...',
+						processing: '查询中...',
+						search: '检索:',
+						lengthMenu: '每页 _MENU_ 件',
+						zeroRecords: '没有数据',
+						paginate: {
+							'first': '第一页',
+							'last': '最后一页',
+							'next': '下一页',
+							'previous': '上一页'
+						},
+						info: '第 _PAGE_ 页 / 总 _PAGES_ 页',
+						infoEmpty: '没有数据',
+						infoFiltered: '(过滤总件数 _MAX_ 条)',
+					},
+					buttons: [{
+							extend: 'copyHtml5',
+						},
+						{
+							extend: 'excelHtml5',
+							title: 'Data export'
+						},
+						{
+							extend: 'pdfHtml5',
+							title: 'Data export'
+						},
+						{
+							extend: 'csvHtml5',
+							title: 'Data export'
+						},
+						{
+							extend: 'print',
+						}
+					]
+				});
+
+				$(".buttons-copy").text('复制');
+				$(".buttons-excel").text('导出到excel');
+				$(".buttons-pdf").text('导出到pdf');
+				$(".buttons-csv").text('导出到csv');
+				$(".buttons-print").text('打印');
+
+			});
+		</script>
+
+	</body>
+
+</html>

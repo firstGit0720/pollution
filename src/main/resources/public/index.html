@@ -1,0 +1,403 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title>蜗牛天气-首页</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/index.css">
+		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+		<script src="https://cdn.bootcss.com/jquery/1.2.3/jquery.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-panels.min.js"></script>
+		<script src="js/init.js"></script>
+
+		<noscript>
+			<link rel="stylesheet" href="css/skel-noscript.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-desktop.css" />
+		</noscript>
+
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-grid.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/style2.css">
+		<link rel="stylesheet" href="css/pick-pcc.min.1.0.1.css">
+
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/pick-pcc.min.1.0.1.js"></script>
+		<script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
+
+		<style type="text/css">
+			.shadow {
+				background-color: white;
+				box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+				-webkit-border-radius: 10px;
+				border-radius: 10px;
+
+				/*-moz-box-shadow:2px 2px 10px #333333; -webkit-box-shadow:2px 2px 10px #333333; box-shadow:2px 2px 10px #333333;*/
+			}
+		</style>
+
+		<!--城市选择-->
+		<style type="text/css">
+			/*body{ background:#EEEEEE;margin:0; padding:0; font-family:"微软雅黑", Arial, Helvetica, sans-serif; }*/
+			a{ color:#006600; text-decoration:none;}
+			a:hover{color:#990000;}
+			.top{ margin:5px auto; color:#990000; text-align:center;}
+			.info select{ border:1px #993300 solid; background:#FFFFFF;}
+			.info{ margin:5px; text-align:left;}
+			.info #show{ color:#3399FF; -webkit-border-radius: 10px;
+				border-radius: 10px;}
+			.bottom{ text-align:right; font-size:12px; color:#CCCCCC; width:1000px;}
+		</style>
+
+
+		<script type="text/javascript">
+            //日期格式化
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+
+            var nowtemp;
+            var nowstatus;
+            var nowwind;
+            var nowRH;
+            var todayForecastTemp = new Array()
+            var todayForecastDate = new Array()
+            var todayForecastRh = new Array()
+            var todayForecastYq = new Array()
+            var todayForecastWind = new Array()
+            //30天
+            //数据的获取
+            var maxfuturemontem = new Array()
+            var minfuturemontem = new Array()
+            var datefutureArray = new Array()
+            //7天
+            var maxfuturedaystem = new Array()
+            var minfuturedaystem = new Array()
+            var daysfutureArray = new Array()
+            function okbycity() {
+                alert($("#s_city").val())
+                $.ajax({
+                    type:"get",
+                    url:"/showtodayweather",
+                    async: false,
+                    data:{
+                        "cityname":$("#s_city").val()
+                    },
+                    success:function (data) {
+                        console.log(data)
+                        //实时显示
+                        nowtemp = data.todayWeather.nowtemp
+                        nowstatus = data.todayWeather.nowstatus
+                        nowwind = data.todayWeather.nowwind + data.todayWeather.nowwindnum
+                        nowRH = data.todayWeather.nowhumidity
+                        $("#nowtemp").text(nowtemp+"℃")
+                        $("#nowstatus").text(nowstatus)
+                        $("#nowwindandrh").text(nowwind+'\t'+'\t'+'相对湿度：'+nowRH)
+                        //预测
+                        var todayForecast = new Array()
+                        todayForecast = data.todayForrcast
+                        console.log(todayForecast)
+                        for (var i = 0;i< todayForecast.length; i++){
+                            var dateStr = new Date(todayForecast[i].nowtime).Format("yyyy/MM/dd hh:mm:ss");
+                            todayForecastDate[i] = dateStr
+                            todayForecastTemp[i] = todayForecast[i].nowtemp
+                            todayForecastRh[i] = todayForecast[i].nowsd
+                            todayForecastYq[i] = todayForecast[i].nowyq
+                            todayForecastWind[i] = todayForecast[i].nowfs
+                        }
+                        //未来7天
+                        var daysforeacst = new Array()
+                        daysforeacst = data.daysForecast
+                        for (var i = 0; i < daysforeacst.length;i++){
+                            daysfutureArray[i] = daysforeacst[i].weatherTime
+                            maxfuturedaystem[i] = daysforeacst[i].tem.substring(3,5)
+                            minfuturedaystem[i] = daysforeacst[i].tem.substring(0,2)
+                        }
+                        //30天预测
+                        var monForecast = new Array()
+                        monForecast = data.monForecast
+                        for (var i =0 ;i<monForecast.length;i++){
+                            datefutureArray[i] = monForecast[i].weatherTime
+                            maxfuturemontem[i] = monForecast[i].tem.substring(3,5)
+                            minfuturemontem[i] = monForecast[i].tem.substring(0,2)
+                        }
+
+                    }
+
+                })
+            }
+		</script>
+
+	</head>
+
+	<body class="homepage">
+		<!-- Header -->
+		<div id="header">
+			<div class="info" style="float: right;">
+				<div>
+					<select id="s_province" name="s_province" style="width: 100px;height: 40px"></select>  
+					<select id="s_city" name="s_city" style="width: 100px;height: 40px"></select>
+					<button onclick="okbycity()" class="btn btn-default">确定</button>  
+					<select id="s_county" name="s_county" class="hidden"></select>
+					<script class="resources library" src="js/area.js" type="text/javascript"></script>
+
+					<script type="text/javascript">_init_area();</script>
+				</div>
+				<div id="show"></div>
+			</div>
+			<script type="text/javascript">
+                var Gid  = document.getElementById ;
+                var showArea = function(){
+                    Gid('show').innerHTML = "<h3>省" + Gid('s_province').value + " - 市" +
+                        Gid('s_city').value + " - 县/区" +
+                        Gid('s_county').value + "</h3>"
+                }
+                Gid('s_county').setAttribute('onchange','showArea()');
+			</script>
+
+			<div class="container">
+				<!-- Logo -->
+				<div id="logo" style="float: left;padding-top:0px ;">
+					<h1 style="font-size: 10px;"><a href="#" id="nowtemp">38℃<img src="images/01.png" width="70px" height="70px" /></a></h1>
+					<p style="font-size: xx-large;font-weight: bolder;color: white;" id="nowstatus">多云</p>
+					<span style="font-weight: bold;color: #FFFFFF;" id="nowwindandrh">南风1级&nbsp;&nbsp;&nbsp;湿度60%&nbsp;&nbsp;&nbsp;气压1003.8hPa</span>
+					<span style="font-weight: bold;"><h2>天太热了，吃个西瓜~~</h2></span>
+				</div>
+
+				<!---->
+				<nav id="nav" style="float: right;">
+					<ul>
+						<li class="active">
+							<a href="index.html" style="font-weight: bold;">实时监测</a>
+						</li>
+						<li>
+							<a href="pollution.html" style="font-weight: bold;">历史污染统计</a>
+						</li>
+						<li>
+							<a href="weather.html" style="font-weight: bold;">历史天气统计</a>
+						</li>
+						<li>
+							<a href="about.html" style="font-weight: bold;">相关知识</a>
+						</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+
+
+		<!-- Main -->
+		<div id="main">
+			<div class="container">
+				<span style="font-weight: bold;"><p>本日气温变化图</p></span>
+				<div style="width: 100%;padding: 30px ;" class="shadow">
+					<div id="todayweather" style="height: 250px;width: 100%;"></div>
+				</div>
+				<br />
+				<span style="font-weight: bold;"><p>未来气温变化预报</p></span>
+				<div class="row" style="margin-top:15px;">
+
+					<div style="width: 65%; height:600px; float: left;" class="shadow">
+
+						<div id="content1" class="8u skel-cell-important ">
+							<section>
+								<header>
+								</header>
+								<div id="line" style="height: 250px;width: 700px;"></div>
+							</section>
+						</div>
+
+						<div id="content" class="8u skel-cell-important ">
+							<section>
+								<header>
+								</header>
+								<div id="30" style="height: 250px;width: 700px;"></div>
+							</section>
+						</div>
+					</div>
+
+					<!-- Sidebar -->
+					<div id="sidebar" class="4u tiles" style="width: 35%;height: 50%; float: right;">
+						<div class='col'>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<div class='box'></div>
+						</div>
+						<div class='col'>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<div class='box'></div>
+						</div>
+						<div class='col'>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<div class='box'></div>
+						</div>
+						<div class='col'>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<div class='box'></div>
+						</div>
+						<div class='col'>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<div class='box'></div>
+						</div>
+						<div class='col'>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<div class='box'></div>
+						</div>
+						<div class='col'>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<div class='box'></div>
+						</div>
+						<div class='col'>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<div class='box'></div>
+						</div>
+						<!--<div class="shadow" style="float: left;width: 45%;height: 160px;margin-top:55px ;">
+							<img src="images/pic01.jpg" alt="" width="100%" height="100%" />
+						</div>
+						<div class="shadow" style="float: right;width: 45%;height: 160px;margin-top:55px ;">
+							<img src="images/pic01.jpg" alt="" width="100%" height="100%" />
+						</div>-->
+						<!--<div class="shadow">
+									<p class="posted">运动指数</p>
+									<img src="images/pic06.jpg" alt="" />
+									<p class="text">Nullam non wisi a sem eleifend. Donec mattis libero eget urna. Pellentesque viverra enim.</p>
+								</div>
+				-->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer -->
+
+		<!-- Footer -->
+		<div id="footer">
+
+			<div class="container">
+				<div class="row">
+					<div class="">
+						<section>
+							<!--<h2>Latest Posts</h2>-->
+							<ul class="default">
+								<a href="#" class="image full"><img src="images/zgqxt.png" width="50px" height="50px" alt="" /></a>
+								<li>
+									<a href="http://www.nmc.gov.cn/">中国天气象台|http://www.nmc.gov.cn/</a>
+								</li>
+							</ul>
+						</section>
+					</div>
+					<div class="">
+						<section>
+							<!--<h2>Ultrices fringilla</h2>-->
+							<ul class="default">
+								<a href="http://pc.weathercn.com/" class="image full"><img src="images/zgtq.png" alt="" width="50px" height="50px" /></a>
+								<li>
+									<a href="#">中国天气|http://pc.weathercn.com/</a>
+								</li>
+							</ul>
+						</section>
+					</div>
+					<div class="">
+						<section>
+							<!--<h2>Aenean elementum</h2>-->
+							<ul class="default">
+								<a href="http://www.cma.gov.cn/" class="image full"><img src="images/qxj.png" alt="" width="50px" height="50px" /></a>
+								<li>
+									<a href="#">中国气象局|http://www.cma.gov.cn/</a>
+								</li>
+							</ul>
+						</section>
+					</div>
+					<div class="">
+						<section>
+							<!--<h2>Aenean elementum</h2>-->
+							<ul class="default">
+								<a href="#" class="image full"><img src="images/zgtqw.png" alt="" width="50px" height="50px" /></a>
+								<li>
+									<a href="http://www.weather.com.cn/">中国天气网|http://www.weather.com.cn/</a>
+								</li>
+							</ul>
+						</section>
+					</div>
+				</div>
+			</div>
+			<div id="copyright">
+				<div class="container">
+					Copyright &copy; 独角兽工作室
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$(function() {
+				$(".contentimg .img_content").mouseover(function() {
+					$(".img_content .mask").show();
+				});
+				$(".contentimg .img_content").mouseout(function() {
+					$(".img_content .mask").hide();
+				});
+			});
+		</script>
+
+		<!-- Copyright -->
+
+		<script src="js/todayweather.js"></script>
+		<script src="js/line.js"></script>
+		<script src="js/30.js"></script>
+
+	</body>
+	<div style="text-align:center;clear:both">
+		<script src="/gg_bd_ad_720x90.js" type="text/javascript"></script>
+		<script src="/follow.js" type="text/javascript"></script>
+	</div>
+
+</html>

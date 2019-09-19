@@ -1,0 +1,223 @@
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+/*html, body {
+  margin: 0;
+  padding: 0;
+  background: #f1deb9;
+}*/
+
+.tiles {
+	
+  width: 750px;
+  height: 450px;
+  perspective: 1000px;
+}
+
+.col {
+	
+  position: relative;
+  float: left;
+  margin: 6px;
+  width: calc(150px - 12px);
+  height: calc(150px - 12px);
+}
+.col a {
+	
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+.col a:nth-child(1) {
+	
+  -webkit-clip-path: polygon(0 0, 100% 0, 50% 50%);
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+}
+.col a:nth-child(2) {
+  -webkit-clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+  clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+}
+.col a:nth-child(3) {
+  -webkit-clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+  clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+}
+.col a:nth-child(4) {
+  -webkit-clip-path: polygon(0 0, 50% 50%, 0 100%);
+  clip-path: polygon(0 0, 50% 50%, 0 100%);
+}
+.col a:hover {
+  z-index: 3;
+  -webkit-clip-path: none;
+  clip-path: none;
+}
+.col a:nth-child(1):hover ~ .box {
+  transform: rotateX(180deg);
+}
+.col a:nth-child(2):hover ~ .box {
+  transform: rotateY(180deg);
+}
+.col a:nth-child(3):hover ~ .box {
+  transform: rotateX(-180deg);
+}
+.col a:nth-child(4):hover ~ .box {
+  transform: rotateY(-180deg);
+}
+.col a:nth-child(1):hover ~ .box:after, .col a:nth-child(3):hover ~ .box:after {
+  transform: rotateX(-180deg);
+}
+.col a:nth-child(2):hover ~ .box:after, .col a:nth-child(4):hover ~ .box:after {
+  transform: rotateY(-180deg);
+}
+.col .box {
+	
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-border-radius: 10px;
+	border-radius: 10px;
+  font-family: "Open Sans", sans-serif;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  transform-style: preserve-3d;
+  transition: transform .3s ease-in-out;
+}
+
+.col .box:before {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  font: normal normal normal 14px/1 FontAwesome;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 5px;
+  z-index: 2;
+  backface-visibility: hidden;
+}
+.col .box:after {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  color: #FFF;
+  border-radius: 5px;
+  transition-delay: .15s;
+}
+/*
+.col .box:before {
+	
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333333;
+  font: normal normal normal 14px/1 FontAwesome;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 2px;
+  z-index: 2;
+  backface-visibility: hidden;
+}
+.col .box:after {
+	
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  color: #333333;
+  border-radius: 2px;
+  transition-delay: .15s;
+}*/
+.col:nth-child(1) .box:before {
+	
+  content: url("../images/yifu.png");
+  color: grey;
+  background: white;
+  -webkit-border-radius: 10px;
+				border-radius: 10px;
+}
+.col:nth-child(1) .box:after {
+  background: white;
+  content: '少穿点';
+  color: grey;
+}
+.col:nth-child(2) .box:before {
+  content:url("../images/雨伞.png");
+  color: grey;
+  background: white;
+}
+.col:nth-child(2) .box:after {
+  content: '要下雨啦';
+  color: grey;
+  background: white;
+}
+.col:nth-child(3) .box:before {
+  content: url("../images/ganmao.png");
+  color: grey;
+  background: white;
+}
+.col:nth-child(3) .box:after {
+  content: '尽情嗨';
+  color: grey;
+  background: white;
+}
+.col:nth-child(4) .box:before {
+  content: url("../images/洗车.png");
+  color: grey;
+  background: white;
+}
+.col:nth-child(4) .box:after {
+  content: '要下雨啦洗毛线车啊';
+  color: grey;
+  background: white;
+}
+.col:nth-child(5) .box:before {
+  content: url("../images/旅游.png");
+  color: grey;
+  background: white;
+}
+.col:nth-child(5) .box:after {
+  content: '下雨天运动脑子瓦特啦啊';
+  color: grey;
+  background: white;
+}
+.col:nth-child(6) .box:before {
+  content: url("../images/fangshai.png");
+  color: grey;
+  background: white;
+}
+.col:nth-child(6) .box:after {
+  content: '阴天下雨收衣服';
+  color: grey;
+  background: white;
+}
+.col:nth-child(7) .box:before {
+  content: url("../images/diaoyu.png");
+  color: grey;
+  background: white;
+}
+.col:nth-child(7) .box:after{
+  content: '钓鱼的好天气哦';
+  color: grey;
+  background: white;
+}
+.col:nth-child(8) .box:before {
+  content: url("../images/运动.png");
+  color: grey;
+  background: white;
+}
+.col:nth-child(8) .box:after {
+  content: '你要是楞去也没人管你';
+  color: grey;
+  background: white;
+}
